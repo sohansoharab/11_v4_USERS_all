@@ -1,0 +1,10 @@
+done
+    -Custom user creation
+    -Register, Login, Logout
+    -Creating Post by a user
+
+to do
+    -how to find out any relationship using wtihout request.(attrs)
+    -edit the post
+    -delete the post
+    -comment section and count
