@@ -141,3 +141,7 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
+
+LOGIN_URL = '/login'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

@@ -24,12 +24,21 @@
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'index' %}">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Accounts</a>
-          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user_logout' %}">Log Out</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'new_post' %}">Create Post</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user_login' %}">Login</a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>

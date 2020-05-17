@@ -1,0 +1,30 @@
+{% extends 'basic_app/base.html' %}
+{% load widget_tweaks %}
+    {% block content %}
+        {% if user.is_authenticated %}
+            <h1>Create New Post</h1>
+            <form enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                {% for hidden in post_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in post_form.visible_fields %}
+                    <div class="form-group row">
+                        <label class="col-sm-3" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% render_field field class="form-control col-sm-9" %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger col-sm-12 mt-4" role="alert">
+                                <span class="help-block">{{ error }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <input type="submit" value="Create" class="btn btn-outline-success">
+
+            </form>
+        {% else %}
+            <h1>Please Login/Register First. Otherwise you can not create any posts</h1>
+            <a href="{% url 'user_login' %}" class="btn ml-4 btn-outline-info">Login</a>
+            <a href="{% url 'register' %}" class="btn ml-4 btn-outline-success">Register</a>
+        {% endif %}
+    {% endblock %}

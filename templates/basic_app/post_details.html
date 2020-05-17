@@ -1,0 +1,16 @@
+{% extends 'basic_app/base.html' %}
+{% load widget_tweaks %}
+    {% block content %}
+        {% if user.is_authenticated %}
+            {% if post %}
+                <h2>{{ post.title }}</h2>
+
+            {% else %}
+                <h3>Post is not available right now</h3>
+            {% endif %}
+        {% else %}
+            <h1>Please Login/Register First. Otherwise you can not create any posts</h1>
+            <a href="{% url 'user_login' %}" class="btn ml-4 btn-outline-info">Login</a>
+            <a href="{% url 'register' %}" class="btn ml-4 btn-outline-success">Register</a>
+        {% endif %}
+    {% endblock %}
