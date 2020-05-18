@@ -20,6 +20,10 @@ class UserProfileInfoForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
+    title = forms.CharField(widget=forms.TextInput(), required=True)
+    content = forms.CharField(widget=forms.Textarea(), required=True)
+    thumbnail = forms.ImageField(required=False)
+
     class Meta():
         model = Post
         fields = ('title', 'content', 'thumbnail')

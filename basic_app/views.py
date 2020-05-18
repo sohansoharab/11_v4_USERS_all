@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from basic_app.forms import UserForm, UserProfileInfoForm, PostForm
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from basic_app.models import Post
+from basic_app.models import Post, Comment
+from django.forms import inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -99,6 +100,7 @@ def new_post(request):
             messages.add_message(request, messages.SUCCESS, f'Hey {user.username} You have added a post right now')
             return redirect(reverse('index'), {'messages': messages})
         else:
+            post_form.add_error('Information are not fulfilled correctly!')
             messages.add_message(request, messages.WARNING, f'Something is wrong.')
             return HttpResponseRedirect(reverse('new_post'), {'messaged': messages})
     else:
@@ -109,3 +111,52 @@ def new_post(request):
 def post_details(request, pk):
     post = Post.objects.get(pk=pk)
     return render(request, 'basic_app/post_details.html', {'post': post})
+
+
+# def post_edit(request, pk):
+#     post = Post.objects.get(pk=pk)
+#     if request.method == 'POST':
+#         post_form = PostForm(request.POST)
+#         if post_form.is_valid():
+#             post_form.title = request.POST['title']
+#             post_form.content = request.POST['content']
+#             post_form.thumbnail = request.POST['thumbnail']
+#             post_form.save()
+#             messages.add_message(request, messages.SUCCESS, f'Edited the post.')
+#             # return render(request, 'basic_app/post_edit.html', {'post': post})
+#             return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'messages': messages})
+#         else:
+#             messages.add_message(request, messages.WARNING, f'Something is wrong.')
+#             return HttpResponseRedirect(reverse('post_edit'), {'messaged': messages})
+#     else:
+#         post_form = PostForm()
+#         messages.add_message(request, messages.WARNING, f'Something is wrong.')
+#         # return HttpResponseRedirect(reverse('post_edit'), {'messaged': messages})
+#
+#     return render(request, 'basic_app/post_edit.html', {'post': post, 'messages': messages, 'post_form': post_form})
+
+
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.content = request.POST['content']
+            post.thumbnail = request.POST['thumbnail']
+            post.save()
+            messages.add_message(request, messages.SUCCESS, f'You have edited the post.')
+            return redirect('post_details', pk=post.pk)
+        else:
+            messages.add_message(request, messages.WARNING, f'Something is wrong.')
+            return HttpResponseRedirect(reverse('post_edit'), {'messages': messages})
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'basic_app/post_edit.html', {'post_form': form})
+
+
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    messages.add_message(request, messages.ERROR, f'You have deleted a post')
+    return redirect(reverse('index'), {'messages': messages})

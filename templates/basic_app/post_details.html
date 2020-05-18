@@ -3,7 +3,33 @@
     {% block content %}
         {% if user.is_authenticated %}
             {% if post %}
-                <h2>{{ post.title }}</h2>
+                <div class="row">
+                    <h2 class="my-3 text-secondary">{{ post.title }}</h2>
+                </div>
+                <div class="row pb-2">
+                    <h4 class="mb-2 text-muted">
+                        <small class="">{{ post.author.username }}</small>
+                        <small>|</small>
+                        <small>{{ post.date_posted }}</small>
+                    </h4>
+                </div>
+                <div class="row pt-2 pb-4 border border-top-0 border-right-0 border-left-0">
+                    <div class="button-group">
+                        <a href="{% url 'post_edit' post.pk %}" class="btn btn-sm btn-outline-info"><small><strong>Edit Post</strong></small></a>
+                        <a href="{% url 'post_delete' post.pk %}" class="btn btn-sm btn-outline-danger ml-4"><small><strong>Delete Post</strong></small></a>
+                    </div>
+                </div>
+                <div class="row mt-4 text-secondary">
+                    <p>{{ post.content }}</p>
+                </div>
+
+                <div class="row">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ formset.as_p }}
+                    </form>
+                </div>
+
 
             {% else %}
                 <h3>Post is not available right now</h3>
