@@ -8,3 +8,4 @@ done
 to do
     -how to find out any relationship using wtihout request.(attrs)
     -comment section and count
+    -interact with JS (TEXT_EDITOR) (optional)
